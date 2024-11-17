@@ -7,7 +7,7 @@ use std::process::{Command, Stdio};
 use anyhow::bail;
 use mdbook::book::SectionNumber;
 use mdbook::preprocess::PreprocessorContext;
-use pulldown_cmark::{CowStr, Event, LinkType, Tag, TagEnd};
+use pulldown_cmark::Event;
 
 use crate::config::{Config, Fonts};
 
@@ -172,22 +172,10 @@ impl Backend {
             .collect::<PathBuf>()
             .join(self.relative_file_path(ctx));
 
-        Ok(vec![
-            Event::Start(Tag::Paragraph),
-            Event::Start(Tag::Image {
-                link_type: LinkType::Inline,
-                dest_url: rel_path
-                    .to_string_lossy()
-                    .to_string()
-                    .replace('\\', "/")
-                    .into(),
-                title: CowStr::Borrowed(""),
-                id: CowStr::Borrowed(""),
-            }),
-            Event::End(TagEnd::Image),
-            Event::End(TagEnd::Paragraph),
-        ])
-
+        let src_url = rel_path.to_string_lossy().to_string().replace('\\', "/");
+        Ok(vec![Event::Html(
+            format!("\n<figure><object data=\"{src_url}\" type=\"image/svg+xml\"></object></figure>\n").into(),
+        )])
     }
 
     fn basic_args(&self) -> Vec<&OsStr> {
