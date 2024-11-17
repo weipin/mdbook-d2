@@ -46,6 +46,9 @@ pub struct Config {
     ///
     /// Only ttf fonts are valid
     pub fonts: Option<Fonts>,
+
+    pub theme: Option<String>,
+    pub dark_theme: Option<String>,
 }
 
 impl Default for Config {
@@ -56,6 +59,8 @@ impl Default for Config {
             output_dir: default::output_dir(),
             inline: default::inline(),
             fonts: None,
+            theme: None,
+            dark_theme: None,
         }
     }
 }
@@ -87,6 +92,8 @@ output-dir = "d2"
 path = "/custom/bin/d2"
 layout = "elk"
 output-dir = "d2-img"
+theme = "1"
+dark-theme = "200"
 "#
     => Config {
         path: PathBuf::from("/custom/bin/d2"),
@@ -94,6 +101,8 @@ output-dir = "d2-img"
         inline: true,
         output_dir: PathBuf::from("d2-img"),
         fonts: None,
+        theme: Some(String::from("1")),
+        dark_theme: Some(String::from("200")),
     }
         ; "custom"
     )]

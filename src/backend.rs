@@ -23,6 +23,8 @@ pub struct Backend {
     layout: Option<String>,
     inline: bool,
     fonts: Option<Fonts>,
+    theme: Option<String>,
+    dark_theme: Option<String>,
 }
 
 /// Context for rendering a specific diagram
@@ -80,6 +82,8 @@ impl Backend {
             inline: config.inline,
             source_dir,
             fonts: config.fonts,
+            theme: config.theme,
+            dark_theme: config.dark_theme
         }
     }
 
@@ -183,6 +187,7 @@ impl Backend {
             Event::End(TagEnd::Image),
             Event::End(TagEnd::Paragraph),
         ])
+
     }
 
     fn basic_args(&self) -> Vec<&OsStr> {
@@ -200,6 +205,12 @@ impl Backend {
         }
         if let Some(layout) = &self.layout {
             args.extend([OsStr::new("--layout"), layout.as_ref()]);
+        }
+        if let Some(theme) = &self.theme {
+            args.extend([OsStr::new("--theme"), theme.as_ref()]);
+        }
+        if let Some(dark_theme) = &self.dark_theme {
+            args.extend([OsStr::new("--dark-theme"), dark_theme.as_ref()]);
         }
         args.push(OsStr::new("-"));
         args
